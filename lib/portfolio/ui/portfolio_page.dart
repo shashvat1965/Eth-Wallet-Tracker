@@ -46,63 +46,79 @@ class _PortfolioState extends State<Portfolio>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-            color: Color(0xff2C2929),
-            gradient: LinearGradient(colors: [
-              Color(0xff211C18),
-              Color(0xff211A16),
-              Color(0xff252219)
-            ])),
-        child: Column(
-          children: [
-            const Header(title: "Portfolio"),
-            const AssetsAmountsRow(),
-            ValueListenableBuilder(
-                valueListenable: isLoading,
-                builder: (context, bool value, child) {
-                  if (!value) {
-                    if (PortfolioViewModel.hasError) {
-                      return Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error_outline_outlined,
-                              size: 40.r,
-                              color: Colors.amber,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          isLoading.value = true;
+          initValuesForBalance();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          child: Container(
+            height: 1.sh - 101.h, // screen height - navbar height
+            decoration: const BoxDecoration(
+                color: Color(0xff2C2929),
+                gradient: LinearGradient(colors: [
+                  Color(0xff211C18),
+                  Color(0xff211A16),
+                  Color(0xff252219)
+                ])),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                initValuesForBalance();
+              },
+              child: Column(
+                children: [
+                  const Header(title: "Portfolio"),
+                  const AssetsAmountsRow(),
+                  ValueListenableBuilder(
+                      valueListenable: isLoading,
+                      builder: (context, bool value, child) {
+                        if (!value) {
+                          if (PortfolioViewModel.hasError) {
+                            return Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline_outlined,
+                                    size: 40.r,
+                                    color: Colors.amber,
+                                  ),
+                                  SizedBox(
+                                    height: 0.02.sh,
+                                  ),
+                                  Text(
+                                    PortfolioViewModel.errorMessage,
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white, fontSize: 18.sp),
+                                  )
+                                ],
+                              ),
+                            );
+                          } else {
+                            return SlideTransition(
+                              position: _offsetAnimation,
+                              child: EthRow(
+                                balanceETH: PortfolioViewModel.balanceETH,
+                                balanceUSD: PortfolioViewModel.balanceUSD,
+                              ),
+                            );
+                          }
+                        } else {
+                          return const Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.amber,
+                              ),
                             ),
-                            SizedBox(
-                              height: 0.02.sh,
-                            ),
-                            Text(
-                              PortfolioViewModel.errorMessage,
-                              style: GoogleFonts.poppins(
-                                  color: Colors.white, fontSize: 18.sp),
-                            )
-                          ],
-                        ),
-                      );
-                    } else {
-                      return SlideTransition(
-                        position: _offsetAnimation,
-                        child: EthRow(
-                          balanceETH: PortfolioViewModel.balanceETH,
-                          balanceUSD: PortfolioViewModel.balanceUSD,
-                        ),
-                      );
-                    }
-                  } else {
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.amber,
-                        ),
-                      ),
-                    );
-                  }
-                })
-          ],
+                          );
+                        }
+                      })
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

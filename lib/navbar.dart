@@ -4,7 +4,7 @@ import 'package:cypherock_task/portfolio/ui/portfolio_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -73,13 +73,9 @@ class _NavbarState extends State<Navbar> {
       resizeToAvoidBottomInset: true,
       hideNavigationBarWhenKeyboardShows: true,
       popActionScreens: PopActionScreensType.all,
-      itemAnimationProperties: const ItemAnimationProperties(
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-      ),
       screenTransitionAnimation: const ScreenTransitionAnimation(
         animateTabTransition: true,
-        curve: Curves.ease,
+        curve: Curves.linear,
         duration: Duration(milliseconds: 200),
       ),
       navBarStyle: NavBarStyle.style12,

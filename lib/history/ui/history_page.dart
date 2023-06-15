@@ -31,56 +31,66 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xff211C18),
-          Color(0xff211A16),
-          Color(0xff252219)
-        ])),
-        child: Column(
-          children: [
-            const Header(title: "History"),
-            const TimeAmountRow(),
-            ValueListenableBuilder(
-                valueListenable: isLoading,
-                builder: (context, bool value, child) {
-                  if (value) {
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.amber,
-                        ),
-                      ),
-                    );
-                  } else {
-                    if (HistoryViewModel.hasError) {
-                      return Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error_outline_outlined,
-                              size: 40.r,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          isLoading.value = true;
+          initHistory();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Container(
+            height: 1.sh - 101.h,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [
+              Color(0xff211C18),
+              Color(0xff211A16),
+              Color(0xff252219)
+            ])),
+            child: Column(
+              children: [
+                const Header(title: "History"),
+                const TimeAmountRow(),
+                ValueListenableBuilder(
+                    valueListenable: isLoading,
+                    builder: (context, bool value, child) {
+                      if (value) {
+                        return const Expanded(
+                          child: Center(
+                            child: CircularProgressIndicator(
                               color: Colors.amber,
                             ),
-                            SizedBox(
-                              height: 0.02.sh,
+                          ),
+                        );
+                      } else {
+                        if (HistoryViewModel.hasError) {
+                          return Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error_outline_outlined,
+                                  size: 40.r,
+                                  color: Colors.amber,
+                                ),
+                                SizedBox(
+                                  height: 0.02.sh,
+                                ),
+                                Text(
+                                  HistoryViewModel.errorMessage,
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.white, fontSize: 18.sp),
+                                )
+                              ],
                             ),
-                            Text(
-                              HistoryViewModel.errorMessage,
-                              style: GoogleFonts.poppins(
-                                  color: Colors.white, fontSize: 18.sp),
-                            )
-                          ],
-                        ),
-                      );
-                    } else {
-                      return HistoryList();
-                    }
-                  }
-                })
-          ],
+                          );
+                        } else {
+                          return HistoryList();
+                        }
+                      }
+                    })
+              ],
+            ),
+          ),
         ),
       ),
     );

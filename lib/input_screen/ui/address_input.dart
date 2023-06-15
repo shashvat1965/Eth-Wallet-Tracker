@@ -3,7 +3,6 @@ import 'package:cypherock_task/input_screen/input_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../navbar.dart';
 
@@ -30,9 +29,7 @@ class _InputScreenState extends State<InputScreen> {
           duration: const Duration(seconds: 2));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
-    PersistentNavBarNavigator.pushNewScreen(context,
-        screen: Navbar(),
-        pageTransitionAnimation: PageTransitionAnimation.slideRight);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Navbar()));
   }
 
   @override

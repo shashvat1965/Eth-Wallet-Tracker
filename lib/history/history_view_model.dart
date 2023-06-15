@@ -14,6 +14,9 @@ class HistoryViewModel {
   static Map<String, List<Transaction>> sortedFilteredTransactions = {};
 
   Future<void> getTransactionList() async {
+    sortedFilteredTransactions.clear();
+    sortedTransactions.clear();
+    transactionHistory.clear();
     int? statusCode;
     String? jsonResponseString;
 
