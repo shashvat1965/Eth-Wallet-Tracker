@@ -64,7 +64,7 @@ class TimeAmountRow extends StatelessWidget {
                       onChanged: (value) {
                         print(value);
                         HistoryViewModel().filterTransactionByValue(
-                            BigInt.tryParse(value) ?? BigInt.zero);
+                            double.tryParse(value) ?? 0);
                         HistoryViewModel.amountFilterOrSortChanged.value =
                             !HistoryViewModel.amountFilterOrSortChanged.value;
                       },

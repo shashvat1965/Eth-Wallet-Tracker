@@ -88,7 +88,7 @@ class HistoryViewModel {
     }
   }
 
-  void filterTransactionByValue(BigInt? amount) {
+  void filterTransactionByValue(double? amount) {
     // solution for implementing deep copying i.e copying with values rather than reference
     sortedFilteredTransactions.clear();
     for (String date in sortedTransactions.keys) {
@@ -104,13 +104,14 @@ class HistoryViewModel {
       sortedFilteredTransactions[date] = transactionList;
     }
 
-    if ((amount ?? BigInt.zero) > BigInt.zero) {
+    if ((amount ?? 0) > 0) {
       for (String date in sortedFilteredTransactions.keys) {
         (sortedFilteredTransactions[date] ?? []).removeWhere((value) =>
-            (BigInt.from((BigInt.parse(value.value!) +
-                        BigInt.parse(value.gasUsed!)) /
-                    BigInt.from(pow(10, 18))) <
-                (amount ?? BigInt.zero)));
+            (double.parse(((BigInt.parse(value.value!) +
+                            BigInt.parse(value.gasUsed!)) /
+                        BigInt.from(pow(10, 18)))
+                    .toStringAsFixed(2)) <
+                (amount ?? 0.0)));
       }
     }
     sortedFilteredTransactions.removeWhere(
